@@ -1,6 +1,6 @@
-#ToDo List
+# ToDo List
 
-##For running locally
+## For running locally
 
 ### dot env file
 ```
