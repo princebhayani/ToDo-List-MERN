@@ -1,29 +1,41 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-function Create() {
+function Update() {
+    const getFormattedDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    };
+
     const [formData, setFormData] = useState({
         task: "",
-        description: " ",
-        dueDate: " ",
-        todoStatus: " ",
+        description: "",
+        dueDate: getFormattedDate(new Date()),
+        todoStatus: "pending",
     });
+
     const navigate = useNavigate();
     const params = useParams();
 
     useEffect(() => {
-            const fetchTodo = async () => {
-                const todoId = params.id;
-                const res = await fetch(`/api/get/${todoId}`);
-                const data = await res.json();
-                if (data.success === false) {
-                    console.log(data.message);
-                    return;
-                }
-                setFormData(data);
-            };
-            fetchTodo();
-    }, []);
+        const fetchTodo = async () => {
+            const todoId = params.id;
+            const res = await fetch(`/api/get/${todoId}`);
+            const data = await res.json();
+            if (data.success === false) {
+                console.log(data.message);
+                return;
+            }
+            setFormData({
+                ...data,
+                dueDate: getFormattedDate(data.dueDate),
+            });
+        };
+        fetchTodo();
+    }, [params.id]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -49,16 +61,16 @@ function Create() {
         }
         setFormData({
             task: "",
-            description: " ",
-            dueDate: " ",
-            todoStatus: " ",
+            description: "",
+            dueDate: getFormattedDate(new Date()),
+            todoStatus: "pending",
         });
         navigate("/");
     };
 
     return (
         <div className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-lg">
-            <h1 className="text-3xl font-bold mb-6">Add a New ToDo</h1>
+            <h1 className="text-3xl font-bold mb-6">Update ToDo</h1>
             <form onSubmit={updateTodo} className="space-y-4">
                 <div className="space-y-1">
                     <label
@@ -100,7 +112,7 @@ function Create() {
                         htmlFor="dueDate"
                         className="block text-lg font-medium text-gray-700"
                     >
-                        Date:
+                        Due Date:
                     </label>
                     <input
                         type="date"
@@ -108,6 +120,7 @@ function Create() {
                         required
                         onChange={handleChange}
                         value={formData.dueDate}
+                        pattern="\d{4}-\d{2}-\d{2}"
                         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
@@ -132,11 +145,11 @@ function Create() {
                     </select>
                 </div>
                 <button className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    Add
+                    Update
                 </button>
             </form>
         </div>
     );
 }
 
-export default Create;
+export default Update;
