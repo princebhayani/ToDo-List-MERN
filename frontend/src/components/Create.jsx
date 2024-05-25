@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams} from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate} from 'react-router-dom';
 
 function Create() {
   const [formData, setFormData] = useState({
@@ -9,25 +9,6 @@ function Create() {
     todoStatus:" "
   });
   const navigate = useNavigate();
-  const params = useParams();
-
-  useEffect(()=>{
-    if(params){
-      const fetchTodo = async ()=>{
-        const todoId = params.id;
-        const res = await fetch(`/api/get/${todoId}`)
-        const data = await res.json();
-        if (data.success === false) {
-          console.log(data.message);
-          return;
-        }
-        setFormData(data);
-      };
-      fetchTodo();
-    }
-},[])
-  
-
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -51,39 +32,19 @@ function Create() {
     } catch (error) {
       console.log(error.message);
     }
-    // setFormData({
-    //   task: "",
-    //   description: " ",
-    //   dueDate: " ",
-    //   todoStatus:" ",
-    // });
+    setFormData({
+      task: "",
+      description: " ",
+      dueDate: " ",
+      todoStatus:" ",
+    });
     navigate('/');
-  };
-
-  const updateTodo = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch(`/api/update/` + params.id, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(...formData),
-      });
-      const data = await res.json();
-      if (data.success === false) {
-        console.log(data.message);
-        return;
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
   };
 
   return (
     <div className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-lg">
     <h1 className="text-3xl font-bold mb-6">Add a New ToDo</h1>
-    <form onSubmit={params?handleSubmit:updateTodo} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1">
             <label htmlFor="task" className="block text-lg font-medium text-gray-700">Task:</label>
             <input
@@ -140,8 +101,6 @@ function Create() {
         </button>
     </form>
 </div>
-
-
   );
 }
 

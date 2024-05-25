@@ -10,16 +10,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/get",(req,res)=>{
-    ToDoModel.find()
-    .then(result=> res.json(result))
-    .catch(error =>res.json(error))
+app.get("/api/get", async (req,res)=>{
+    try {
+        const todos = await ToDoModel.find();
+        return res.status(201).json(todos);
+    } catch (error) {
+        console.log(error);
+    }
 })
-app.get("/api/get/:id",(req,res)=>{
-    const {id} = req.params;
-    ToDoModel.findById({_id:id})
-    .then(result=> res.json(result))
-    .catch(error =>res.json(error))
+app.get("/api/get/:id",async (req,res)=>{
+    try {
+        const todo = await ToDoModel.findById({_id:req.params.id});
+        return res.status(201).json(todo);
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 app.post("/api/add", async(req, res) =>  {
@@ -31,21 +36,29 @@ app.post("/api/add", async(req, res) =>  {
     }
 });
 
-app.put("/api/update/:id",(req,res)=>{
-    const {id} = req.params;
-    ToDoModel.findByIdAndUpdate({_id:id})
-    .then(result => res.json(result))
-    .catch(err => res.json(err));
+app.put("/api/update/:id",async (req,res)=>{
+    try {
+        const updatedTodo = await ToDoModel.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {new:true}
+        );
+        res.status(200).json(updatedTodo);
+    } catch (error) {
+        
+    }
 })
 
-app.delete("/api/delete/:id",(req,res)=>{
-    const {id} = req.params;
-    ToDoModel.findByIdAndDelete({_id:id})
-    .then(result => res.json(result))
-    .catch(err => res.json(err));
+app.delete("/api/delete/:id",async (req,res)=>{
+    try {
+        const todo = await ToDoModel.findByIdAndDelete({_id:req.params.id});
+        return res.status(201).json(todo);
+    } catch (error) {
+        console.log(error);
+    }
 })
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     connectToMongoDB();
     console.log(`Server is running on port ${PORT}`);
