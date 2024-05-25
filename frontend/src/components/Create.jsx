@@ -26,7 +26,7 @@ function Create() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`/api/add`, {
+      const res = await fetch(`/tasks/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

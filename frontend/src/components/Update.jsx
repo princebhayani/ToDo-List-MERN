@@ -23,7 +23,7 @@ function Update() {
     useEffect(() => {
         const fetchTodo = async () => {
             const todoId = params.id;
-            const res = await fetch(`/api/get/${todoId}`);
+            const res = await fetch(`/tasks/get/${todoId}`);
             const data = await res.json();
             if (data.success === false) {
                 console.log(data.message);
@@ -44,7 +44,7 @@ function Update() {
     const updateTodo = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`/api/update/${params.id}`, {
+            const res = await fetch(`/tasks/update/${params.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

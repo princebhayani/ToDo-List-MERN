@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   server: {
     proxy: {
-      '/api': {
+      '/tasks': {
         target: 'http://localhost:5000',
         secure: false,
       },

@@ -6,7 +6,7 @@ function Home() {
     
     useEffect(() => {
         const getTodos = async () => {
-            const res = await fetch(`/api/get`);
+            const res = await fetch(`/tasks/get`);
             const data = await res.json();
             if (data.success === false) {
                 console.log(data.message);
@@ -19,7 +19,7 @@ function Home() {
 
     const handleDelete = async (id) => {
         try {
-            const res = await fetch(`/api/delete/` + id, {
+            const res = await fetch(`/tasks/delete/` + id, {
                 method: "DELETE",
             });
             const data = await res.json();

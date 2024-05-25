@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/get", async (req,res)=>{
+app.get("/tasks/get", async (req,res)=>{
     try {
         const todos = await ToDoModel.find();
         return res.status(201).json(todos);
@@ -18,7 +18,7 @@ app.get("/api/get", async (req,res)=>{
         console.log(error);
     }
 })
-app.get("/api/get/:id",async (req,res)=>{
+app.get("/tasks/get/:id",async (req,res)=>{
     try {
         const todo = await ToDoModel.findById({_id:req.params.id});
         return res.status(201).json(todo);
@@ -27,7 +27,7 @@ app.get("/api/get/:id",async (req,res)=>{
     }
 })
 
-app.post("/api/add", async(req, res) =>  {
+app.post("/tasks/add", async(req, res) =>  {
     try {
         const todo = await ToDoModel.create(req.body);
         return res.status(201).json(todo);
@@ -36,7 +36,7 @@ app.post("/api/add", async(req, res) =>  {
     }
 });
 
-app.put("/api/update/:id",async (req,res)=>{
+app.put("/tasks/update/:id",async (req,res)=>{
     try {
         const updatedTodo = await ToDoModel.findByIdAndUpdate(
             req.params.id,
@@ -49,7 +49,7 @@ app.put("/api/update/:id",async (req,res)=>{
     }
 })
 
-app.delete("/api/delete/:id",async (req,res)=>{
+app.delete("/tasks/delete/:id",async (req,res)=>{
     try {
         const todo = await ToDoModel.findByIdAndDelete({_id:req.params.id});
         return res.status(201).json(todo);
