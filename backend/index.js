@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 import path from "path";
@@ -8,7 +7,6 @@ import connectToMongoDB from "./db/connectToMongoDB.js";
 import ToDoModel from "./model/todo.model.js";
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 
 app.get("/tasks/get", async (req, res) => {
