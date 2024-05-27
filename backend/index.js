@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
+import path from "path";
 
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import ToDoModel from "./model/todo.model.js";
@@ -10,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/tasks/get", async (req,res)=>{
+app.get("/tasks/get", async (req, res) => {
     try {
         const todos = await ToDoModel.find();
         return res.status(201).json(todos);
@@ -18,16 +19,16 @@ app.get("/tasks/get", async (req,res)=>{
         console.log(error);
     }
 })
-app.get("/tasks/get/:id",async (req,res)=>{
+app.get("/tasks/get/:id", async (req, res) => {
     try {
-        const todo = await ToDoModel.findById({_id:req.params.id});
+        const todo = await ToDoModel.findById({ _id: req.params.id });
         return res.status(201).json(todo);
     } catch (error) {
         console.log(error);
     }
 })
 
-app.post("/tasks/add", async(req, res) =>  {
+app.post("/tasks/add", async (req, res) => {
     try {
         const todo = await ToDoModel.create(req.body);
         return res.status(201).json(todo);
@@ -36,26 +37,33 @@ app.post("/tasks/add", async(req, res) =>  {
     }
 });
 
-app.put("/tasks/update/:id",async (req,res)=>{
+app.put("/tasks/update/:id", async (req, res) => {
     try {
         const updatedTodo = await ToDoModel.findByIdAndUpdate(
             req.params.id,
             req.body,
-            {new:true}
+            { new: true }
         );
         res.status(200).json(updatedTodo);
     } catch (error) {
-        
+
     }
 })
 
-app.delete("/tasks/delete/:id",async (req,res)=>{
+app.delete("/tasks/delete/:id", async (req, res) => {
     try {
-        const todo = await ToDoModel.findByIdAndDelete({_id:req.params.id});
+        const todo = await ToDoModel.findByIdAndDelete({ _id: req.params.id });
         return res.status(201).json(todo);
     } catch (error) {
         console.log(error);
     }
+})
+
+const __dirname = path.resolve();
+
+app.use(express.static(path.join(__dirname, "/frontend/dist")))
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"))
 })
 
 const PORT = process.env.PORT || 5000;
